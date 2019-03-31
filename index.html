@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+	</head>
+	<body>
+		<label for="vector-length">Taille du vecteur</label>
+		<input id="vector-length" type="number" />
+		<div id="vector-values">Valeurs</div>
+		<button id="equalize-action">Égaliser</button>
+		<div id="equalize-log"></div>
+	</body>
+	<script>
+		(() => {
+			function equalize(vector) {
+				let sum = 0, acc,
+				i, j = 0, l = vector.length,
+				prev, next, curr,
+				count = true, stop,
+				logLine;
+				
+				do {
+					j++;
+					acc = 0;
+					stop = true;
+
+					console.log(`# START INTERATION ${j}`);
+					logLine = document.createElement('div');
+					logLine.appendChild(document.createTextNode(`# START INTERATION ${j}`));
+					equalizeLog.appendChild(logLine);
+					for (i = 0; i < l; i++) {
+						prev = vector[i - 1];
+						next = vector[i + 1];
+						curr = vector[i];
+
+						if (isNaN(prev) && curr > next) {
+							(vector[i + 1]++, --vector[i]);
+						} else if (isNaN(next) && curr > prev) {
+							(vector[i - 1]++, --vector[i]);
+						} else if (curr > prev && prev <= next) {
+							(vector[i - 1]++, --vector[i]);
+						} else if (curr > next && next <= next) {
+							(vector[i + 1]++, --vector[i]);
+						}
+
+						if (i > 0) {
+							acc += vector[i - 1];
+							
+							if (vector[i - 1] !== sum / l) {
+								stop = false;
+							}
+						}
+						console.log(`${i + 1}:[${vector.join(', ')}]`);
+						logLine = document.createElement('div');
+						logLine.appendChild(document.createTextNode(`${i + 1}:[${vector.join(', ')}]`));
+						equalizeLog.appendChild(logLine);
+					}
+					if (count === true) {
+						acc += vector[l - 1];
+						sum = acc;
+					}
+					count = false;
+				} while (!stop)
+			}
+		
+			let vectorLength = 0;
+			let vectorValuesNode = document.querySelector('#vector-values');
+			let equalizeLog = document.querySelector('#equalize-log');
+
+			document.querySelector('#vector-length').addEventListener('change', e => {
+				let val = e.target.value;
+				let i;
+				if (val > vectorLength) {
+					let newInput;
+					for (i = vectorLength; i < val; i++) {
+						newInput = document.createElement('input');
+						newInput.className = 'vector-value';
+						vectorValuesNode.appendChild(newInput);
+					}
+				} else {
+					for (i = val; i < vectorLength; i++) {
+						vectorValuesNode.removeChild(vectorValuesNode.lastChild);
+					}
+				}
+				
+				vectorLength = val;
+			})
+			
+			document.querySelector('#equalize-action').addEventListener('click', (val) => {
+				values = [...document.querySelectorAll('.vector-value')].map(n => n.value);
+				while (equalizeLog.firstChild) {
+					equalizeLog.removeChild(equalizeLog.firstChild)
+				}
+				equalize(values);
+			})
+		})()
+	</script>
+</html>
