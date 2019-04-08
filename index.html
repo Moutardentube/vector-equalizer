@@ -38,10 +38,10 @@
 							(vector[i + 1]++, --vector[i]); // Envoyer une unité à droite
 						} else if (isNaN(next) && curr > prev) { // Si c'est la dernière valeur et qu'elle est supérieure à la précédente
 							(vector[i - 1]++, --vector[i]); // Envoyer une unité à gauche
+						} else if (curr > next && next <= prev) { // Si la valeur la plus faible est à droite
+							(vector[i + 1]++, --vector[i]); // Envoyer une unité à droite
 						} else if (curr > prev && prev <= next) { // Si la valeur la plus faible est à gauche
 							(vector[i - 1]++, --vector[i]); // Envoyer une unité à gauche
-						} else if (curr > next && next <= next) { // Si la valeur la plus faible est à droite
-							(vector[i + 1]++, --vector[i]); // Envoyer une unité à droite
 						}
 						// L'unité a été envoyée, la valeur à gauche ne changera plus au cours de cette itération
 						if (i > 0) {
@@ -61,7 +61,7 @@
 						sum = acc; // Calculer la somme des valeurs lors de la première boucle pour déterminer la valeur finale
 					}
 					count = false;
-				} while (!stop)
+				} while (!stop && j < 100)
 			}
 		
 			let vectorLength = 0;
